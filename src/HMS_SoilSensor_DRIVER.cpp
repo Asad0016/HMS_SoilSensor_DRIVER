@@ -129,9 +129,9 @@ float HMS_SoilSensor::CalculateMoisture(float sensorVolt, float adcValue)
     if (adcRange == HMS_SOIL_ADC_RANGE_INVALID)  return -1.0f;
         
     // ---- Calculate Moisture Percentage ----
-    MoisturePercentage = ((HMS_SOIL_SENSOR_MOISTURE_DRY_VALUE - adcValue) / (HMS_SOIL_SENSOR_MOISTURE_DRY_VALUE - HMS_SOIL_SENSOR_MOISTURE_WET_VALUE)) * HMS_SOIL_SENSOR_PERCENTAGE;
+    MoisturePercentage = ((HMS_SOIL_SENSOR_MOISTURE_DRY_VALUE - adcValue) / (ENSOR_MOISTURE_DRY_VALUE - HMS_SOIL_SENSOR_MOISTURE_WET_VALUE)) * HMS_SOIL_SENSOR_PERCENTAGE;
     MoisturePercentage = std::clamp(MoisturePercentage, 0.0f, 100.0f);
-
+    #ifdef HMS_SOIL_SENSOR_LOGGER_ENABLED
     const char* rangeText = "";
     switch (adcRange) {
         case HMS_SOIL_ADC_RANGE_WET:                rangeText = "Wet";          break;
@@ -141,7 +141,6 @@ float HMS_SoilSensor::CalculateMoisture(float sensorVolt, float adcValue)
         default:                                    rangeText = "Invalid";      break;
     }
     
-    #ifdef HMS_SOIL_SENSOR_LOGGER_ENABLED
         soilLogger.debug("ADC: %.2f | Voltage: %.2f | Moisture: %.2f%% | Range: %s",
                      adcValue, sensorVolt, MoisturePercentage, rangeText);
     #endif
